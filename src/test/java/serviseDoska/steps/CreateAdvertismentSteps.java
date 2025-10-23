@@ -50,6 +50,8 @@ public class CreateAdvertismentSteps {
         ValidatableResponse loginResponse = apiClient.loginUser(registerUser);
         accessToken = apiClient.getAccessToken(loginResponse);
         userId = apiClient.getUserId(loginResponse);
+
+        Hooks.setUserCredentials(accessToken, userId, apiClient);
     }
 
     @And("Открывает главную страницу")

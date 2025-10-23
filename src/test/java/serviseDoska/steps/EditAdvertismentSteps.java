@@ -49,6 +49,8 @@ public class EditAdvertismentSteps {
         accessToken = apiClient.getAccessToken(loginResponse);
         userId = apiClient.getUserId(loginResponse);
 
+        Hooks.setUserCredentials(accessToken, userId, apiClient);
+
         mainPage.openMainPage();
         mainPage.clickCreateAdvertismentButton();
 

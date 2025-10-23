@@ -39,11 +39,16 @@ public class EditAdvertismentPage {
         // Получаем актуальный текст
         String actualTitle = titleLabel().getText().trim();
 
+        // Форматируем сообщение об ошибке с помощью String.format
+        String errorMessage = String.format(
+                "Неверное название объявления. Ожидалось: '%s', но получено: '%s'",
+                expectedTitle,
+                actualTitle
+        );
+
         // Проверяем соответствие
         if (!actualTitle.equals(expectedTitle)) {
-            throw new AssertionError("Неверное название объявления. " +
-                    "Ожидалось: '" + expectedTitle + "'" +
-                    ", но получено: '" + actualTitle + "'");
+            throw new AssertionError(errorMessage);
         }
 
         return this;

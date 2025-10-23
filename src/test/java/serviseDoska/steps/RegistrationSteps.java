@@ -34,6 +34,8 @@ public class RegistrationSteps {
         accessToken = apiClient.getAccessToken(registerResponse);
         userId = apiClient.getUserId(registerResponse);
         savedEmail = user.getEmail();
+
+        Hooks.setUserCredentials(accessToken, userId, apiClient);
     }
 
     @When("Пользователь открывает главную страницу")

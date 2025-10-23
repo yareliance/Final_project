@@ -70,6 +70,8 @@ public class LoginSteps {
         System.out.println("Полученный accessToken: " + accessToken);
         System.out.println("Полученный userId: " + userId);
 
+        Hooks.setUserCredentials(accessToken, userId, apiClient);
+
     }
 
     @Then("Пользователь успешно авторизуется")

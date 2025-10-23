@@ -1,5 +1,6 @@
 package serviseDoska.steps;
 
+import org.junit.jupiter.api.Assertions;
 import serviseDoska.data.*;
 import serviseDoska.pages.*;
 import serviseDoska.api.ApiClient;
@@ -45,6 +46,8 @@ public class DeleteAdvertismentSteps {
         accessToken = apiClient.getAccessToken(loginResponse);
         userId = apiClient.getUserId(loginResponse);
 
+        Hooks.setUserCredentials(accessToken, userId, apiClient);
+
     }
 
     @And("У пользователя есть объявление для удаления")
@@ -71,9 +74,17 @@ public class DeleteAdvertismentSteps {
 
     @Then("Объявление должно быть удалено")
     public void advertismentShouldBeDeleted() {
-        // Проверяем отсутствие объявления в списке
+
         personalPage.openPersonalPage();
-        personalPage.checkAdvertismentInProfile(ad.getName());
+
+        // Проверяем отсутствие элемента
+        Assertions.assertFalse(
+                personalPage.firstAdCard().isDisplayed(),
+                String.format(
+                        "Ошибка: объявление с названием \"%s\" не было удалено!",
+                        ad.getName()
+                )
+        );
 
     }
 

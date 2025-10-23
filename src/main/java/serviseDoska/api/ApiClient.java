@@ -6,8 +6,6 @@ import io.qameta.allure.Step;
 import static io.restassured.RestAssured.given;
 
 import static io.restassured.filter.log.LogDetail.ALL;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -16,6 +14,8 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import java.lang.RuntimeException;
+
 
 // Класс для работы с API
 public class ApiClient {
@@ -86,44 +86,18 @@ public class ApiClient {
     public void deleteUsersAfterTests(String accessToken, Integer userId) {
 
         if (accessToken != null && userId != null) {
-            Response response = null;
             try {
-                response = deleteUser(accessToken, userId);
+                Response response = deleteUser(accessToken, userId);
 
-                int statusCode = response.statusCode();
-                if (statusCode == 200) {
-                // Валидация успешного удаления
-                assertThat(response.statusCode(), equalTo(200));
-                assertThat(response.jsonPath().getBoolean("success"), equalTo(true));
-                assertThat(response.jsonPath().getString("message"), equalTo("Пользователь успешно удален"));
-
-                System.out.println("Пользователь успешно удален");
-
-                } else if (statusCode == 401) {
-                    // Обработка ошибки авторизации
-                    String errorMessage = response.jsonPath().getString("message");
-                    if (errorMessage.contains("У вас нет прав") || errorMessage.contains("Unauthorized")) {
-                        System.out.println("Ошибка 401: Нет прав на удаление пользователя");
-                    }
-
-                } else {
-                    // Обработка других ошибок
-                    System.out.println("Ошибка при удалении пользователя:");
-                    System.out.println(response.prettyPrint());
-                }
-
-            } catch (AssertionError e) {
-                // Безопасная проверка на null
-                if (response != null) {
-                    System.out.println("Ошибка при проверке удаления пользователя:");
-                    System.out.println(response.prettyPrint());
+                if (response.statusCode() == 200) {
+                    System.out.println("Пользователь успешно удален");
+                } else if (response.statusCode() == 401) {
+                    System.out.println("Ошибка при удалении пользователя 401: " + response.jsonPath().getString("message"));
                 }
 
             } catch (Exception e) {
-                System.out.println("Произошла ошибка при удалении пользователя: " + e.getMessage());
+                throw new RuntimeException("Ошибка при удалении пользователя: " + e.getMessage());
             }
-        } else {
-            System.out.println("Не удалось удалить пользователя - отсутствуют данные: accessToken или userId");
         }
     }
 

@@ -6,9 +6,16 @@ import serviseDoska.utils.TestUtils;
 
 public class Hooks {
 
-    private static ApiClient apiClient = new ApiClient();
-    private String accessToken;
-    private Integer userId;
+    private static String accessToken;
+    private static Integer userId;
+    private static ApiClient apiClient;
+
+    // Для передачи данных из тестовых сценариев в хуки
+    public static void setUserCredentials(String token, Integer id, ApiClient client) {
+        accessToken = token;
+        userId = id;
+        apiClient = client;
+    }
 
     @Before
     public void setUp() {
